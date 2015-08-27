@@ -447,7 +447,7 @@ class Rsync(threading.Thread):
 
         # Check ssh connection, and get path of rsync on the remote host
         check_command = [
-            self.ssh_binary, "-q", "-T", "-p", str(self.destination.get("remote_port", "22")),
+            self.ssh_binary, str(self.destination.get("remote_port", "22")),
             self.destination.get("remote_user") + "@" + self.destination.get("remote_host"),
             "LANG=C which rsync"
         ]
@@ -477,7 +477,7 @@ class Rsync(threading.Thread):
         # Remote pre command
         if self.destination.get("remote_pre_command"):
             pre_command = [
-                self.ssh_binary, "-q", "-T", "-p", str(self.destination.get("remote_port", "22")),
+                self.ssh_binary, str(self.destination.get("remote_port", "22")),
                 self.destination.get("remote_user") + "@" + self.destination.get("remote_host"),
                 "$SHELL -l -c \"LANG=C cd " + self.destination.get("remote_path") + " && " + self.destination.get("remote_pre_command") + "\""
             ]
@@ -494,7 +494,7 @@ class Rsync(threading.Thread):
         # Build rsync command
         rsync_command = [
             "rsync", "-v", "-zar",
-            "-e", self.ssh_binary + " -q -T -p " + str(self.destination.get("remote_port", "22")) + " -o ConnectTimeout=" + str(self.timeout)
+            "-e", self.ssh_binary + str(self.destination.get("remote_port", "22")) + " -o ConnectTimeout=" + str(self.timeout)
         ]
         # We allow options to be specified as "--foo bar" in the config so we need to split all options on first space after the option name
         for option in self.options:
@@ -543,7 +543,7 @@ class Rsync(threading.Thread):
         # Remote post command
         if self.destination.get("remote_post_command"):
             post_command = [
-                self.ssh_binary, "-q", "-T", "-p", str(self.destination.get("remote_port", "22")),
+                self.ssh_binary, str(self.destination.get("remote_port", "22")),
                 self.destination.get("remote_user") + "@" + self.destination.get("remote_host"),
                 "$SHELL -l -c \"LANG=C cd " + self.destination.get("remote_path") + " && " + self.destination.get("remote_post_command") + "\""
             ]
